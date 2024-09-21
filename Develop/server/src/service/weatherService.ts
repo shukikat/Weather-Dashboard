@@ -79,17 +79,31 @@ class WeatherService {
   
   
   // TODO: Create destructureLocationData method
-  private destructureLocationData(locationData: any): Coordinates {
+  private destructureLocationData(locationData: any) {
+    const {latitude, longitude, city}=locationData
+
      //extract coordinates from location
     return {
-      longitude: locationData.coord.lon, 
-      latitude: locationData.coord.lat, 
+      latitude, longitude, city
      };
   }
   // TODO: Create buildGeocodeQuery method
-  // private buildGeocodeQuery(): string {}
+  private buildGeocodeQuery(city: string, limit:number=1): string {
+    const apiKey=process.env.API_KEY
+    const geoCode=`http://api.openweathermap.org/geo/1.0/direct?q=${city},&limit=${limit}&appid=${apiKey}`
+    return geoCode
+
+  }
+
   // TODO: Create buildWeatherQuery method
-  // private buildWeatherQuery(coordinates: Coordinates): string {}
+  //private buildWeatherQuery(coordinates: Coordinates): string {
+  private buildWeatherQuery(latitude:number, longitude: number): string {
+    
+    const apiKey=process.env.API_KEY
+    const buildWeather=`http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+    return buildWeather
+
+  }
   // TODO: Create fetchAndDestructureLocationData method
   // private async fetchAndDestructureLocationData() {}
   // TODO: Create fetchWeatherData method
