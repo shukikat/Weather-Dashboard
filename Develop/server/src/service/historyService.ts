@@ -67,13 +67,13 @@ class HistoryService {
 
     const cities = await this.read();
 
-    return cities.map(city => new City(city.name, city.id)); // convert city object to instances
+    return cities.map((city: { name: string; id: string; }) => new City(city.name, city.id)); // convert city object to instances
 
 
 
 
   }
-}
+
 
 
 
@@ -100,6 +100,8 @@ class HistoryService {
 
 }
 
+}
+
 
 // * BONUS TODO: Define a removeCity method that removes a city from the searchHistory.json file
 // async removeCity(id: string) {}
@@ -110,3 +112,7 @@ function generateUniqueId(): string {
   throw new Error('Function not implemented.');
 }
 
+
+function addCity(city: any, string: any) {
+  throw new Error('Function not implemented.');
+}

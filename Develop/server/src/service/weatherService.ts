@@ -13,12 +13,12 @@ interface Coordinates {
 class Weather {
   temp: number;
   wind: number;
-  humidity: number
+  humidity: number;
 
   constructor(temp: number, wind: number, humidity: number) {
-    this.temp = temp,
-      this.wind = wind,
-      this.humidity = humidity
+    this.temp = temp;
+      this.wind = wind;
+      this.humidity = humidity;
   }
 
 }
@@ -26,14 +26,15 @@ class Weather {
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
+  private cityName: string;
   private baseURL: string;
-  private apiKey: string;
-  //private cityName: string
+  private apiKey: string | undefined;
+  
 
   constructor(cityName: string) {
-    //this.cityName = cityName;
+    this.cityName = cityName;
     this.baseURL = 'https://api.openweathermap.org'; 
-    this.apiKey = process.env.API_KEY; 
+    this.apiKey = process.env.API_KEY;
   
 
   if(!this.apiKey) {
@@ -56,8 +57,6 @@ class WeatherService {
     
     
     const data = await response.json();
-
-
     const temp = data.main.temp;
     const wind = data.wind.speed;
     const humidity = data.main.humidity;
@@ -70,7 +69,7 @@ class WeatherService {
     console.error("Error fetching data:", error);
     throw error; 
   }
-
+  }
   // TODO: Create fetchLocationData method
   // private async fetchLocationData(query: string)
   private async fetchLocationData(lat: number, long: number) {
@@ -98,7 +97,7 @@ class WeatherService {
 
 
   }
-}
+//}
 
 
   // TODO: Create destructureLocationData method
@@ -123,7 +122,7 @@ class WeatherService {
   private buildWeatherQuery(latitude: number, longitude: number): string {
 
   //const apiKey = process.env.API_KEY
-  const buildWeather = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+  const buildWeather = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`
   return buildWeather
 
 }
@@ -143,35 +142,22 @@ class WeatherService {
   const locationData = await response.json(); 
   return this.destructureLocationData(locationData[0]); 
 
-  //if (locationData.length > 0) {
+//    catch (error) {
+//   console.error(`Error Received`, error);
+//   throw error
+// }
 
- // const { lat: latitude, lon: longitude, name: city} = locationData[0];
-
-  //return { latitude, longitude, city: cityName }
-  }
-
-
- 
-  // else {
-  //   return ('No error found'); 
-  // }
-
-
-
-  catch (error) {
-  console.error(`Error Received`, error);
-  throw error
 }
     
  
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {
-  const weatherQuery = this.buildWeatherQuery(coordinates.latitude, coordinates.longitude)
+  const weatherQuery = this.buildWeatherQuery(coordinates.latitude, coordinates.longitude);
   const response = await fetch(weatherQuery); 
    
 
     if (!response.ok) {
-      throw new Error ('Error was received')
+      throw new Error ('Error was received');
     }
 
     //const weatherForCity=await response.json(); 
@@ -187,7 +173,7 @@ class WeatherService {
   
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) 
-  function parseCurrentWeather (data: any ){
+  private parseCurrentWeather (data: any ){
     //get the weather
     const currentWeather=data.list[0];//first forecast entry
     return {
@@ -206,7 +192,7 @@ class WeatherService {
 
   //}
   // TODO: Complete buildForecastArray method
-  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+  private buildForecastArray(_currentWeather: Weather, weatherData: any[]) {
     //const weatherData=[]
 
     return weatherData.map(forecast=>({
@@ -239,7 +225,7 @@ class WeatherService {
     try {
    const {latitude, longitude}=await this.fetchAndDestructureLocationData(city); 
    const weatherData=await this.fetchWeatherData({latitude, longitude}); 
-   return this.parseCurrentWeather(weatherData)
+   return this.parseCurrentWeather(weatherData);
 
     }
 
@@ -269,5 +255,8 @@ class WeatherService {
     // })
   }
 }
+
+
+
 
 export default new WeatherService();
