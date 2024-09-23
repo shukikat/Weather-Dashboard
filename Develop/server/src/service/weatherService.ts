@@ -5,7 +5,7 @@ dotenv.config();
 // TODO: Define an interface for the Coordinates object
 interface Coordinates {
   longitude: number;
-  latitude: number
+  latitude: number;
 }
 
 // TODO: Define a class for the Weather object
@@ -26,13 +26,13 @@ class Weather {
 // TODO: Complete the WeatherService class
 class WeatherService {
   // TODO: Define the baseURL, API key, and city name properties
-  private cityName: string;
+  //private cityName: string;
   private baseURL: string;
   private apiKey: string | undefined;
   
 
-  constructor(cityName: string) {
-    this.cityName = cityName;
+  constructor(_cityName: string) {
+    //this.cityName = cityName;
     this.baseURL = 'https://api.openweathermap.org'; 
     this.apiKey = process.env.API_KEY;
   
@@ -112,7 +112,7 @@ class WeatherService {
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery(city: string, limit: number = 1): string {
   //const apiKey = process.env.API_KEY
-  return `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${limit}&appid=${this.apiKey}`
+  return `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${limit}&appid=${this.apiKey}`;
   //return geoCode
 
 }
@@ -122,8 +122,8 @@ class WeatherService {
   private buildWeatherQuery(latitude: number, longitude: number): string {
 
   //const apiKey = process.env.API_KEY
-  const buildWeather = `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`
-  return buildWeather
+  return `http://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${this.apiKey}`
+  //return buildWeather
 
 }
   // TODO: Create fetchAndDestructureLocationData method
@@ -179,7 +179,7 @@ class WeatherService {
     return {
       
         cityName:data.city.name,
-        temprature:currentWeather.main.feels_like, 
+        temperature:currentWeather.main.feels_like, 
         humidity:currentWeather.list.humidity, 
         windSpeed:currentWeather.wind.speed
 
@@ -225,7 +225,11 @@ class WeatherService {
     try {
    const {latitude, longitude}=await this.fetchAndDestructureLocationData(city); 
    const weatherData=await this.fetchWeatherData({latitude, longitude}); 
-   return this.parseCurrentWeather(weatherData);
+   const currentWeather = this.parseCurrentWeather(weatherData);
+   const forecastArray = this.buildForecastArray(currentWeather, weatherData.list);
+
+   //return this.parseCurrentWeather(weatherData);
+   return { currentWeather, forecastArray };
 
     }
 
@@ -233,6 +237,8 @@ class WeatherService {
       console.error ('there was a problem with the fetch operation:', error); 
       throw error;
     }
+  }
+}
     // fetch(cityUrl)
     // .then(response=> response.json())
     // .then(data=> {
@@ -253,10 +259,10 @@ class WeatherService {
     // .catch(error=>{
     //   console.error('There was a problem with the fetch operation:', error)
     // })
-  }
-}
+  
 
 
 
+const defaultCityName='Atlanta'
 
-export default new WeatherService();
+export default new WeatherService(defaultCityName);

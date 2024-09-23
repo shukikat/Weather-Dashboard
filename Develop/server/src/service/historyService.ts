@@ -113,6 +113,6 @@ function generateUniqueId(): string {
 }
 
 
-function addCity(city: any, string: any) {
+function addCity(_city: any, _string: any) {
   throw new Error('Function not implemented.');
 }
